@@ -78,12 +78,12 @@ order by homeCity asc;
 select prodId
 from products
 where prodId in (select prodId
-		 from orders
-	         where custId in (select pid
-				  from customers
-			          where pid in (select pid
-					        from people
-						where homecity = 'Toronto')))
+				  from orders
+				  where agentId in (select pid
+								     from agents
+								     where pid in (select pid
+												    from people
+												    where homeCity = 'Toronto')))
 order by prodId desc;
 
 -- 10. Get the last name and home city for all customers who place orders through agents in Teaneck or Santa Monica.
