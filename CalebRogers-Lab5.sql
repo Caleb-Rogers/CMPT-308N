@@ -37,7 +37,7 @@ select distinct pid, commissionPct
 from agents A
 inner join orders O on A.pid = O.agentId
 where custId = 008 
-order by commissionPct desc;
+order by commissionPct asc;
 
 -- 7. Show the last name, home city, and commission percent of Agents who booked an order for the customer whose id is 001, sorted by commission percent from high to low. Use joins.
 select distinct lastName, homeCity, commissionPct
