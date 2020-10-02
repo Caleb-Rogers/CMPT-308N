@@ -85,4 +85,4 @@ where homeCity in (select homeCity
 	           from people
 	           group by homeCity 
 	           order by count (homeCity) desc
-		   limit 1)
+		   limit 1);
