@@ -5,8 +5,8 @@ select city
 from products
 group by city
 having count(city) >= all (select count(city) 
-						     from products 
-						     group by city);
+			   from products 
+			   group by city);
 
 -- 2. Display the names of products whose priceUSD is at or above the average priceUSD, in reverse-alphabetical order.
 select name as productNames
@@ -57,19 +57,18 @@ inner join agents A on C.pid = A.pid;
 -- 8. Create a VIEW of all Customer and People data called PeopleCustomers. Then another VIEW of all Agent and People data called PeopleAgents. Then "select *" from each of them in turn to test.
 create view PeopleCustomers
 as
-select *
+select P.*, C.paymentTerms, C.discountPct
 from people P
-where pid in (select pid
-			   from customers C);
+inner join customers C on P.pid = C.pid;
+
 create view PeopleAgents
 as
-select *
-from people
-where pid in (select pid
-			   from agents);
+select P.*, A.paymentTerms, A.commissionPct
+from people P
+inner join agents A on P.pid = A.pid;
 			  
 select * from PeopleCustomers;
-select * from PeopleAgents;		   
+select * from PeopleAgents;  		   
 			  
 -- 9. Display the first and last name of all customers who are also agents, this time using the views you created.
 select firstName, lastName
