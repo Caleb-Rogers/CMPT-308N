@@ -87,9 +87,14 @@ CREATE TABLE MovieSales (
 
 
 -- Query to show all the directors with whom actor “Roger Moore” has work --
-SELECT firstName, lastName
-FROM People P
-INNER JOIN Actors A ON P.pid = A.pid
-INNER JOIN Directors D ON P.pid = D.pid
-INNER JOIN MovieCast MC ON D.pid = MC.directorID
-WHERE lastName = 'Moore' and firstName = 'Roger';
+select firstName,lastName
+from people
+where pid in (select pid
+	      from directors
+	      where pid in (select directorID
+			    from movieCast
+		            where actorID in (select pid
+			                      from actors
+			                      where pid in (select pid
+							    from people
+							    where lastName = 'Moore' and firstname = 'Roger'))));
