@@ -35,7 +35,7 @@ DROP TABLE IF EXISTS Buddy;
 CREATE TABLE MotherBase (
 	base_ID			  char(3)	 not null,
 	emblem			  text		 not null,
-	progression_level varchar(2) not null,
+	progression_level         varchar(2) 	 not null,
 	base_color 		  text,
 	primary key (base_ID)
 );
@@ -44,7 +44,7 @@ CREATE TABLE MotherBase (
 CREATE TABLE Skills (
 	skill_ID	char(2)	   not null,
 	skill_role	text 	   not null,
-	specialties text,
+	specialties 	text,
 	primary key(skill_ID)
 );
 
@@ -54,7 +54,7 @@ CREATE TABLE StaffManagement (
 	base_ID			char(3) not null references MotherBase(base_ID),
 	first_name		text,
 	last_name		text	not null,
-	dob				date	not null,		
+	dob			date	not null,		
 	skill_ID		varchar	not null references Skills(skill_ID),
 	primary key(staff_ID)
 );
@@ -83,34 +83,34 @@ CREATE TABLE PrimaryWeapons (
 -- SecondaryWeapons
 CREATE TABLE SecondaryWeapons (
 	secondary_weapon text not null,
-	weapon_type		 text not null,
+	weapon_type	 text not null,
 	primary key (secondary_weapon)
 );
 
 -- SupportWeapons
 CREATE TABLE SupportWeapons (
 	support_weapon 	text not null,
-	weapon_type		text not null,
+	weapon_type	text not null,
 	primary key (support_weapon)
 );
 
 -- Items
 CREATE TABLE Items (
-	items 			 text not null,
+	items 		 text not null,
 	item_description text,
 	primary key (items)
 );
 
 -- Tools
 CREATE TABLE Tools (
-	tools		     text not null,
+	tools		 text not null,
 	tool_description text,
 	primary key (tools)
 );
 
 -- Resources
 CREATE TABLE Resources (
-	base_ID				char(3) not null references MotherBase(base_ID),
+	base_ID			char(3) not null references MotherBase(base_ID),
 	resource_name		text 	not null,
 	quantity_stored 	int 	not null,
 	primary key (base_ID)
@@ -118,15 +118,15 @@ CREATE TABLE Resources (
 
 -- Equipment
 CREATE TABLE Equipment (
-	equip_ID			char(3) not null,
-	resource_ID			char(3) not null references Resources(base_ID),
+	equip_ID		char(3) not null,
+	resource_ID		char(3) not null references Resources(base_ID),
 	primary_weapon_hip	text    not null references PrimaryWeapons(primary_weapon),
 	primary_weapon_back	text    not null references PrimaryWeapons(primary_weapon),
 	secondary_weapon	text	not null references SecondaryWeapons(secondary_weapon),
 	support_weapon		text	not null references SupportWeapons(support_weapon),
-	items				text	not null references Items(items),
-	tools				text	not null references Tools(tools),
-	GMP_to_develop		int		not null,
+	items			text	not null references Items(items),
+	tools			text	not null references Tools(tools),
+	GMP_to_develop		int	not null,
 	primary key (equip_ID)
 );
 
@@ -148,24 +148,24 @@ CREATE TABLE Buddy (
 -- Loadout
 CREATE TABLE Loadout (
 	loadout_ID  	char(3) not null,
-	equip_ID		char(3) not null references Equipment(equip_ID),
+	equip_ID	char(3) not null references Equipment(equip_ID),
 	vehicle_name 	text 	not null references Vehicle(vehicle_name),
-	buddy_name		text 	not null references Buddy(buddy_name),
+	buddy_name	text 	not null references Buddy(buddy_name),
 	primary key (loadout_ID)
 );
 
 -- BigBoss
 CREATE TABLE BigBoss (
-	snake_ID		char(2) not null,
+	snake_ID	char(2) not null,
 	loadout_ID  	char(2) not null references Loadout(loadout_ID),
 	prosthetic_arm	text,
-	uniform			text,
+	uniform		text,
 	primary key (snake_ID)
 );
 
 -- Espionage
 CREATE TABLE Espionage (
-	snake_ID 		char(3) not null references BigBoss(snake_ID),
+	snake_ID 	char(3) not null references BigBoss(snake_ID),
 	drop_time_24hr  int  	not null,
 	drop_location	text 	not null,
 	primary key (snake_ID)
@@ -174,25 +174,25 @@ CREATE TABLE Espionage (
 -- Missions
 CREATE TABLE Missions (
 	mission_title 	text 	not null,
-	snake_ID 		char(3) not null references Espionage(snake_ID),
-	GMP_reward		int,
+	snake_ID 	char(3) not null references Espionage(snake_ID),
+	GMP_reward	int,
 	primary key (mission_title)
 );
 
 -- SideOps
 CREATE TABLE SideOps (
 	side_ops_title 	text 	not null,
-	snake_ID 		char(3) not null references Espionage(snake_ID),
-	GMP_reward		int,
+	snake_ID 	char(3) not null references Espionage(snake_ID),
+	GMP_reward	int,
 	primary key (side_ops_title)
 );
 
 -- Challenges
 CREATE TABLE Challenges (
-	challenge_num			int 	not null,
+	challenge_num		int 	not null,
 	challenge_description 	text 	not null,
-	snake_ID 				char(3) not null references Espionage(snake_ID),
-	GMP_reward				int,
+	snake_ID 		char(3) not null references Espionage(snake_ID),
+	GMP_reward		int,
 	primary key (challenge_num)
 );
 
@@ -443,8 +443,8 @@ INNER JOIN Buddy Bud on Bud.buddy_name = LO.buddy_name;
 -- calculateStaffChemistry
 SELECT avg(n)::numeric(10,2)
 FROM (SELECT AVG(unit_chemistry) FROM Command_Support 
-   	   UNION ALL
-   	   SELECT AVG(unit_chemistry) FROM Research_BaseDevelopment) t(n);
+      UNION ALL
+      SELECT AVG(unit_chemistry) FROM Research_BaseDevelopment) t(n);
 	   
 -- missionsDuringDay
 SELECT Esp.snake_ID, Esp.drop_time_24hr, Miss.mission_title, Miss.GMP_reward, SO.side_ops_title, SO.GMP_reward, C.challenge_description, C.GMP_reward, Esp.drop_location
@@ -511,13 +511,13 @@ BEGIN
 	IF exists (SELECT Equip.primary_weapon_hip
 			    FROM Equipment Equip
 			    where primary_weapon_hip in (select primary_weapon
-											   from PrimaryWeapons
-											   where weapon_type = 'grenade_launcher'
-											   or weapon_type = 'sniper_rifle'
-											   or weapon_type = 'light_machine_gun')) 
-			THEN
-				RAISE EXCEPTION 'Cannot holster a large weapon on the hip. Insert the weapon so that it is holstered on the back.';
-				RETURN NULL;
+							 from PrimaryWeapons
+							 where weapon_type = 'grenade_launcher'
+							 or weapon_type = 'sniper_rifle'
+							 or weapon_type = 'light_machine_gun')) 
+		THEN
+			RAISE EXCEPTION 'Cannot holster a large weapon on the hip. Insert the weapon so that it is holstered on the back.';
+			RETURN NULL;
 	ELSE
 		RETURN NEW;
 	END IF;
